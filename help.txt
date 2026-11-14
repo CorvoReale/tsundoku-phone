@@ -1,0 +1,286 @@
+TSUNDOKU — GUIDA RAPIDA A TELEGRAM E TELEFONO
+
+Questa guida è anche in Impostazioni → Guida Telegram e telefono.
+Sul telefono: Altro → Guida Telegram e telefono, dopo l’aggiornamento della PWA.
+L’app PC e Studio funzionano senza collegare account esterni.
+
+1. TELEGRAM CON IL PC ACCESO
+- Apri Telegram e cerca il bot ufficiale @BotFather.
+- Usa /newbot e segui le istruzioni per nome e username.
+- Copia il token SOLO in Tsundoku → Impostazioni → Telefono e Telegram.
+- Collega il token: l’app genera un codice temporaneo di abbinamento.
+- Apri il TUO bot e invia /start CODICE, quindi premi Rileva chat nell’app.
+- Scrivi /aiuto. Solo la tua chat privata abbinata può usare la libreria.
+- Chiudere la finestra può lasciare Tsundoku aperto nell’area di notifica;
+  Esci del tutto interrompe anche il bot locale.
+
+COMANDI DI STUDIO
+/ordini                         ordini aperti, senza registrarli come spese
+/obiettivi                      sfide personali e progresso
+/timer Titolo                   propone l’avvio, con pulsante di conferma
+/timer                          mostra pausa/ripresa e termine sessione
+/riprendi                       elenca le opere con nota, senza rivelarla
+/riprendi Titolo                mostra la nota dell’opera scelta
+/nota Titolo | testo            aggiorna la nota, dopo conferma
+/citazione Titolo | testo       aggiunge una citazione personale, dopo conferma
+/guida                          ricorda dove trovare le istruzioni
+
+I comandi precedenti restano: /cerca, /mancano, /oggi, /settimana, /mese,
+/wishlist, /segna, /statistiche e /consigliami. /aiuto li elenca.
+In caso di opere/edizioni omonime il bot propone una scelta.
+Le conferme hanno una scadenza; se una sessione è cambiata aggiorna il comando.
+Un timer conta il tempo fino alla pausa, anche a PC/app chiusi: non rileva
+automaticamente se stai davvero leggendo e non segna volumi come letti.
+
+2. TELEFONO: COSA SI INSTALLA?
+È una PWA, cioè un sito personale aggiungibile alla schermata Home.
+Non devi installare APK né pubblicare su Play Store.
+- Per consultare e modificare anche a PC spento: usa il server personale
+  Cloudflare Workers Free + D1 descritto nella guida avanzata, sezione B.
+- Non basta aprire index.html dal file manager del telefono: serve l’indirizzo
+  HTTPS del tuo server. Fotocamera e notifiche richiedono un browser compatibile.
+- Dal PC collega URL server e chiave desktop nelle Impostazioni.
+- Premi Sincronizza adesso, poi QR per il telefono.
+- Inquadra il QR con IL TUO telefono e apri il link nel browser.
+- In Chrome Android: menu → Installa app oppure Aggiungi a schermata Home.
+  Se il comando non compare, puoi usare il sito nel browser; le restrizioni
+  del dispositivo possono impedire alcune funzioni.
+- Su iPhone/iPad: apri in Safari e usa Condividi → Aggiungi alla schermata Home.
+  Il supporto alle push dipende dal sistema e dalla modalità di installazione.
+- La modalità GitHub precedente è di sola consultazione; per note, citazioni,
+  timer e modifiche dei volumi serve la modalità cloud.
+
+3. BOT A PC SPENTO E PUSH
+Segui Sorgenti_Tsundoku/docs/ATTIVAZIONE_GRATUITA.txt → sezione B.
+Richiede il TUO account Cloudflare, database D1 e chiavi personali.
+Mantieni il piano gratuito; non attivare piani a pagamento o servizi a consumo.
+La guida avanzata spiega creazione database, schema, secrets, pubblicazione,
+webhook Telegram e Web Push. Telegram locale e webhook non vanno usati insieme:
+collega il cloud nell’app e segui il passaggio di modalità descritto lì.
+Questa consegna non crea account e non attiva servizi al tuo posto.
+Per le push: Altro → Attiva notifiche sul telefono, dopo avere configurato
+le chiavi VAPID sul server e dato il consenso nel browser.
+
+4. STUDIO DAL TELEFONO
+Apri un manga: trovi nota di ripresa, citazione e avvio timer in modalità cloud.
+In Altro → Ordini, sfide e timer trovi lo stato sincronizzato e i controlli.
+Gli ordini e la ricezione con prezzo effettivo si gestiscono dal PC.
+Le nuove funzioni PC e telefono condividono i dati tramite il server personale.
+Dopo l’aggiornamento pubblica SIA Worker SIA phone-dist: una PWA nuova con un
+vecchio server può rifiutare le nuove operazioni.
+
+5. SE QUALCOSA NON FUNZIONA
+- Telegram non risponde: PC acceso? App aperta? Token e chat abbinati?
+  Comandi Telegram abilitati? Se usi il cloud, webhook e secrets configurati?
+- Telefono senza dati: sincronizza prima dal PC e verifica Impostazioni →
+  Verifica configurazione. Aggiorna sia Worker sia PWA.
+- Modifiche offline: restano cifrate nella coda del telefono. Torna online e
+  premi Aggiorna. In Altro trovi Modifiche in attesa e il numero di invii.
+- Se una modifica è in conflitto, puoi consultare i dati aggiornati del server
+  e gestire la coda. Non ripetere l’operazione alla cieca.
+- Non scollegare/cancellare i dati del browser finché ci sono invii in attesa:
+  perderesti quelle modifiche. L’app avvisa prima dello scollegamento.
+- Push assenti: controlla consenso browser, iscrizione, chiavi VAPID e risparmio
+  energetico. Collegamento al server non significa ricezione push verificata.
+- L’app sembra vecchia: esci del tutto dall’icona vicino all’orologio, poi apri
+  l’EXE nella nuova cartella e controlla il numero versione nelle Impostazioni.
+
+6. DATI E PRIVACY
+Non condividere token, chiavi, QR o link di abbinamento: danno accesso al tuo
+archivio personale. Il cloud è cifrato a riposo, ma il server può leggere i dati
+per rispondere al bot. Note di ripresa e citazioni fanno parte della copia cloud.
+Le esportazioni anonime contengono solo contatori aggregati; gli inventari e le
+wishlist condivisibili contengono i titoli scelti e non note private o prestiti.
+Esporta un backup JSON prima degli aggiornamenti. Le immagini locali non sono
+incluse nel backup JSON/cifrato esistente. Controlla la leggibilità dei backup
+locali in Studio → esporta e aiuto → Controlla backup locali.
+
+RIFERIMENTI
+https://core.telegram.org/bots/tutorial
+https://developers.cloudflare.com/workers/platform/limits/
+https://support.google.com/chrome/answer/9658361
+
+
+TSUNDOKU 1.15.1-beta.1 — TELEGRAM, TELEFONO E CLOUD GRATUITO
+
+NESSUN SERVIZIO È STATO ATTIVATO A TUO NOME.
+Guida rapida: GUIDA_RAPIDA.txt. Nuovi comandi Studio e gestione coda descritti lì.
+Tutto ciò che segue è facoltativo. L'app desktop funziona senza cloud.
+Non attivare piani Workers Paid, servizi a consumo o acquisti di domini.
+I limiti gratuiti possono cambiare: verifica sempre la schermata dell'account.
+
+A. TELEGRAM CON IL PC ACCESO — PIÙ SEMPLICE
+1. In Telegram, @BotFather > /newbot. Copia il token del TUO bot.
+2. In Tsundoku > Impostazioni > Telefono e Telegram, collega il token.
+3. L'app mostra un codice valido 10 minuti. Scrivi al bot /start CODICE.
+4. Premi Rileva chat. La libreria è collegata solo alla tua chat privata.
+5. Scrivi /aiuto. Prova /cerca Tokyo Ghoul:re 1 e /mancano Tokyo Ghoul:re.
+6. In Funzioni facoltative puoi attivare riepilogo settimanale e promemoria.
+Il PC deve restare acceso, con Tsundoku aperto o nell'area di notifica.
+Disabilitare le notifiche automatiche non disabilita le risposte ai comandi.
+Per disabilitare anche i comandi usa la relativa opzione.
+
+COMANDI
+/cerca Titolo [numero o intervallo]
+/mancano Titolo
+/oggi — giornata corrente nel fuso Europe/Rome
+/settimana — settimana corrente, lunedì-domenica
+/mese — mese corrente
+/wishlist — priorità, attesa, prezzo di copertina o stima dichiarata
+/segna Titolo 3 — pulsanti per confermare possesso o lettura
+/segna Titolo 3 letto
+/segna Titolo 3 posseduto
+/statistiche
+/consigliami rilassante 45
+/aiuto
+/celho è accettato come alias di /cerca.
+
+Le edizioni omonime vengono proposte separatamente. I pulsanti scadono dopo
+24 ore. Le operazioni ripetute non devono duplicare possesso o letture.
+"Preso" è mostrato solo quando la notifica identifica un volume preciso.
+"Ricordamelo domani" crea un promemoria a 24 ore; l'invio avviene al controllo
+successivo. Su cloud il controllo è orario e i messaggi possono essere accodati.
+Le uscite sono quelle confermate già sincronizzate: il bot non inventa date.
+Se il PC resta spento a lungo, il catalogo può diventare meno aggiornato.
+
+B. PC SPENTO — CLOUDFLARE WORKERS FREE + D1
+Questa parte richiede un account Cloudflare gratuito e una configurazione iniziale
+tecnica. Sono inclusi tutti i sorgenti in Sorgenti_Tsundoku/cloud.
+Non è un servizio già ospitato da ChatGPT e non c'è un URL pronto pubblico.
+Il progetto non usa Durable Objects a pagamento, cron esterni o API AI a pagamento.
+
+Preparazione sul tuo computer (Node.js e Python 3, solo per sviluppare/pubblicare):
+1. Crea un account Cloudflare gratuito; mantieni Workers Free.
+2. Da Sorgenti_Tsundoku esegui:
+   python tools/build_cloud.py
+   node tools/generate_cloud_secrets.cjs
+   Conserva privatamente l'output: contiene chiavi segrete. Non pubblicarlo su GitHub.
+3. Entra nella cartella cloud. Accedi al tuo account:
+   npx wrangler login
+4. Crea un database D1 gratuito:
+   npx wrangler d1 create tsundoku
+   Copia il database_id restituito in wrangler.toml, sostituendo il segnaposto.
+5. Crea le tabelle:
+   npx wrangler d1 execute tsundoku --remote --file=schema.sql
+6. Inserisci i valori generati come SECRETS, non come variabili in file pubblici:
+   npx wrangler secret put API_TOKEN
+   npx wrangler secret put PHONE_TOKEN
+   npx wrangler secret put DATA_KEY
+   npx wrangler secret put TELEGRAM_SECRET
+   npx wrangler secret put VAPID_PUBLIC_KEY
+   npx wrangler secret put VAPID_PRIVATE_JWK
+   Per ciascuno incolla il valore corrispondente. Il valore di VAPID_PRIVATE_JWK
+   deve essere il testo JSON della chiave, senza ulteriori virgolette esterne.
+7. Per Telegram aggiungi anche:
+   npx wrangler secret put TG_TOKEN
+   npx wrangler secret put TG_CHAT
+   TG_CHAT è il tuo ID numerico privato, non lo username. Per ottenerlo puoi usare
+   il collegamento locale della sezione A e leggere Chat ID nelle impostazioni. In alternativa, con il bot non ancora in modalità cloud,
+   scrivigli un messaggio e consulta getUpdates dall'API ufficiale Telegram.
+   Non inviare il token o la chiave a persone o siti di terzi.
+   Per le push aggiungi VAPID_SUBJECT con un tuo indirizzo mail, ad esempio
+   mailto:tuo-indirizzo@example.com, secondo le regole del protocollo VAPID.
+8. Pubblica:
+   npx wrangler deploy
+   Copia l'URL HTTPS workers.dev restituito. Non acquistare un dominio.
+9. Imposta il webhook Telegram all'URL /telegram del tuo Worker con secret_token
+   uguale a TELEGRAM_SECRET, usando il metodo setWebhook dell'API ufficiale.
+   L'elenco allowed_updates deve comprendere message e callback_query.
+   Le modalità polling locale e webhook non possono essere attive insieme.
+   Un esempio PowerShell si trova in cloud/set-webhook.ps1; i segreti sono letti
+   dall'ambiente del tuo processo e non inseriti nel file sorgente.
+10. Nel desktop: Impostazioni > server gratuito. Incolla URL e API_TOKEN.
+    Collega e sincronizza. La prima sincronizzazione associa quel PC al server.
+11. Premi QR per il telefono. Apri il link, quindi Aggiungi a schermata Home.
+    Il QR contiene PHONE_TOKEN, che non permette di sostituire l'archivio del PC.
+
+Per passare dal cloud al polling locale, elimina prima il webhook del TUO bot
+con deleteWebhook (senza cancellare gli aggiornamenti pendenti se vuoi leggerli)
+e scollega il server nelle impostazioni, svuotando l'indirizzo e confermando.
+Non usare lo stesso bot con due programmi che leggono contemporaneamente getUpdates.
+
+LIMITI E DATI
+- Un archivio personale per Worker; usa Worker/database diversi per profili diversi.
+- Un PC principale per archivio; più telefoni possono usare la chiave del telefono.
+- Il server conserva dati cifrati AES-GCM a riposo con DATA_KEY. Il Worker li può
+  leggere per rispondere al bot: questa modalità NON è cifratura end-to-end.
+- La modalità GitHub di sola consultazione resta separata e cifrata end-to-end.
+- Il desktop invia una copia ridotta (senza cache, cronologia completa o trame).
+- Limite applicativo della copia cloud: 1 MB UTF-8; non viene attivato alcun upgrade
+  automatico se l'archivio cresce. Tutti i dati completi restano sul PC.
+- Massimo 1000 modifiche in coda; sincronizza il PC periodicamente.
+- Cron orario, massimo due promemoria per invocazione per contenere l'uso gratuito;
+  i promemoria "domani" hanno precedenza sulla wishlist. Possibili ritardi da coda.
+- Limiti Workers/D1 raggiunti possono fermare le richieste. Il piano deve rimanere Free.
+- Fino a cinque iscrizioni push. Il supporto dipende da browser e sistema operativo.
+- Le push si attivano solo dal pulsante del telefono e si possono disattivare.
+- Le modifiche offline sul telefono restano cifrate nella coda locale. Non rimuovere
+  il collegamento o i dati del browser prima di averle sincronizzate.
+- In caso di errore: sul PC controlla Modifiche remote; sul telefono Altro >
+  Modifiche in attesa. Puoi correggere i dati o scartare una singola operazione.
+
+FONTI TECNICHE CONSULTATE
+https://core.telegram.org/bots/api
+https://core.telegram.org/bots/faq
+https://developers.cloudflare.com/workers/platform/limits/
+https://developers.cloudflare.com/d1/platform/pricing/
+https://developers.cloudflare.com/d1/platform/limits/
+https://developer.mozilla.org/en-US/docs/Web/API/Push_API
+
+NOVITÀ 1.7
+I comandi inglesi /search /missing /today /week /month /mark /stats /recommend
+sono alias di quelli italiani. Le risposte seguono la lingua del profilo PC.
+Telefono: Fiera > Scansiona e aggiungi ISBN oppure Inserisci ISBN.
+Per le serie nuove conferma titolo, numero, editore, edizione e paese.
+Se il catalogo non risponde puoi inserire i dati a mano. Nessun totale viene dedotto.
+Le immagini della fotocamera sono elaborate localmente; al catalogo viene inviato
+solo l’ISBN. Aggiorna anche il Worker per usare il nuovo percorso /isbn e le nuove
+operazioni; prima pubblica la nuova PWA e poi riaprila sul telefono.
+
+NOVITÀ 1.9 — ANCORA FACOLTATIVE E GRATUITE
+Dopo l’aggiornamento del Worker e della PWA, apri Impostazioni > Verifica
+configurazione. I controlli non inviano messaggi o mostrano le credenziali.
+Attiva Aggiorna gli episodi anime a PC spento solo se desideri il controllo
+server: una richiesta AniList oraria, fino a 20 ID a rotazione. Nessun acquisto
+o passaggio automatico a un piano a pagamento in caso di limiti.
+Il calendario del telefono e il bot usano i risultati disponibili; la raccolta
+può richiedere più ore per biblioteche con molte stagioni. Le edizioni manga
+locali non sono sostituite da una numerazione giapponese.
+Il riepilogo annuale automatico è disattivabile; Altro sul telefono permette
+di salvare il PNG generato localmente. Il server può notificare che è pronto,
+ma non pubblica immagini e non invia automaticamente un allegato PNG.
+
+NOVITÀ 1.11 — LINGUE OFFLINE
+Italiano, inglese e francese: Impostazioni > Lingua dell’interfaccia.
+Sul telefono la lingua si sceglie in Altro e può essere diversa da quella del PC.
+Il bot segue invece la lingua del profilo PC sincronizzato; non cambia paese,
+valute, edizioni o titoli personali. Nessuna API di traduzione viene usata.
+Alias francesi: /chercher /manquants /jour /semaine /mois /marquer /conseil /aide.
+Esempio: /marquer Tokyo Ghoul:re 3 lu oppure possédé; richiede conferma.
+Per aggiornare una pubblicazione esistente, rigenera prima i cataloghi e gli asset:
+  node tools/build_locales.cjs
+  python tools/build_phone.py
+  python tools/build_cloud.py
+Poi da cloud: npx wrangler deploy. Riavvia la PWA per aggiornare la cache.
+
+QUOTE GRATUITE RICONTROLLATE IL 13 NOVEMBRE 2026
+Workers Free: 100.000 richieste al giorno; limite CPU di 10 ms per invocazione.
+D1 Free: 5 milioni di righe lette/giorno, 100.000 scritte/giorno, 5 GB totali.
+Superare le quote Free provoca errori o indisponibilità; non è previsto un
+passaggio automatico a pagamento da parte di Tsundoku. Il piano dell’account
+va mantenuto Free. Il carico reale e il limite CPU devono essere verificati
+sul proprio account: le simulazioni non certificano il comportamento del provider.
+Fonti: https://developers.cloudflare.com/workers/platform/limits/
+https://developers.cloudflare.com/d1/platform/pricing/
+
+AGGIORNAMENTO 1.12
+Per correggere le date delle nuove modifiche dal telefono aggiorna sia Worker
+sia PWA (i comandi di generazione restano quelli sopra) e riapri il telefono.
+La data viene registrata sul telefono prima dell’invio; se è nel futuro o non è
+valida viene usata la ricezione sul server. Il PC usa quella stessa data.
+Le vecchie operazioni ancora in coda prive di data ricevono una data stabile
+al primo controllo dopo l’aggiornamento: non è possibile ricostruirne l’ora reale.
+Le date già salvate dalle versioni precedenti non vengono riscritte o inventate.
+I pulsanti Telegram divenuti non validi mostrano l’errore senza bloccare la coda.
+Gli errori temporanei di salvataggio conservano invece la possibilità di riprova.
+Nessun nuovo account, servizio o costo è necessario per l’aggiornamento.

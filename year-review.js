@@ -1,0 +1,14 @@
+/* Annual review from dated, recorded activity. Rendering is local and works offline. */
+(function(root){
+'use strict';
+
+function period(S,now=Date.now()){const C=root.WorkCore||require('./work-core.js');const p=C.parts(now,C.zone(S)),year=+p.year,month=+p.month,day=+p.day;return {year:month===1&&day<=2?year-1:year,automatic:month===12&&day===31||month===1&&day<=2};}
+function build(S,year=period(S).year){const C=root.WorkCore||require('./work-core.js'),Money=root.Money||require('./money.js');const matches=ts=>Number.isFinite(ts)&&C.day(ts,C.zone(S)).startsWith(year+'-'),events=(S.log||[]).filter(e=>!e.bulk&&matches(e.t)),purchases=C.purchases(S).filter(e=>matches(e.at)),currency=Money.active(S.settings),paid=purchases.filter(e=>e.known&&e.currency===currency).reduce((a,e)=>a+e.amount,0);return {year,read:events.filter(e=>e.type==='read'&&e.kind==='manga').reduce((a,e)=>a+(e.count||1),0),episodes:events.filter(e=>e.type==='watch'&&e.kind==='anime').reduce((a,e)=>a+(e.count||1),0),purchases:purchases.length,unknown:purchases.filter(e=>!e.known).length,foreign:purchases.filter(e=>e.known&&e.currency!==currency).length,paid:Math.round(paid*100)/100,currency};}
+function render(canvas,review,accent='#a078ff'){const t=value=>root.I18n?root.I18n.translate(value):value,ctx=canvas.getContext('2d');canvas.width=1080;canvas.height=1350;ctx.fillStyle='#14121f';ctx.fillRect(0,0,1080,1350);ctx.fillStyle=/^#[a-f0-9]{6}$/i.test(accent)?accent:'#a078ff';ctx.fillRect(65,100,950,12);ctx.fillStyle='#fff';ctx.font='bold 72px sans-serif';ctx.fillText(t('Il tuo ')+review.year,70,240);ctx.font='40px sans-serif';const money=new Intl.NumberFormat(root.I18n?.locale||'it-IT',{style:'currency',currency:review.currency}).format(review.paid),rows=[review.read+t(' volumi letti'),review.episodes+t(' episodi visti'),review.purchases+t(' acquisti registrati'),money+t(' pagati (dati noti)'),review.unknown+t(' acquisti senza prezzo')];rows.forEach((text,i)=>ctx.fillText(text,70,420+i*125));ctx.font='27px sans-serif';ctx.fillStyle='#b7aecb';ctx.fillText(t('Tsundoku · Attività registrate, inserimenti in blocco esclusi'),70,1190);if(review.foreign)ctx.fillText(t('Acquisti in altre valute esclusi dalla somma: ')+review.foreign,70,1240);return canvas;}
+function automatic(snapshot,now=Date.now()){
+ if(!snapshot?.yearReview||snapshot.annualReview===false)return false;
+ let parts;try{parts=Object.fromEntries(new Intl.DateTimeFormat('en-CA',{timeZone:snapshot.timeZone||'Europe/Rome',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(now).map(p=>[p.type,p.value]));}catch(e){return false;}
+ const y=+parts.year,m=+parts.month,d=+parts.day;return (m===12&&d===31||m===1&&d<=2)&&snapshot.yearReview.year===(m===1?y-1:y);
+}
+const api={period,build,render,automatic};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.YearReview=api;
+})(typeof window!=='undefined'?window:globalThis);

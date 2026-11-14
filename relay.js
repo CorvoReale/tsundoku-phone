@@ -1,0 +1,19 @@
+var __TSK_T = function(value){const i=(typeof window!=="undefined"?window:globalThis).I18n;return i?i.translate(value):value;};
+/* Optional same-origin personal relay. Token is paired via fragment, never sent to other origins. */
+(function(root){
+'use strict';
+const LS=localStorage;
+async function request(path,body){const r=await fetch(path,{method:body?'POST':'GET',headers:{Authorization:'Bearer '+LS.getItem('tsk_relay_token'),'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined,cache:'no-store',signal:typeof AbortSignal!=='undefined'&&AbortSignal.timeout?AbortSignal.timeout(15000):undefined});const x=await r.json();if(!r.ok)throw Error(x.error||__TSK_T('Server non disponibile'));return x;}
+async function outbox(){const data=LS.getItem('tsk_outbox');return data?CryptoBox.decrypt(LS.getItem('tsk_key'),CryptoBox.b64uToBytes(data)):[];}
+async function store(queue){const data=await CryptoBox.encryptBrowser(LS.getItem('tsk_key'),queue);LS.setItem('tsk_outbox',CryptoBox.bytesToB64u(data));}
+let queueChain=Promise.resolve();
+function exclusive(fn){const work=queueChain.then(fn);queueChain=work.catch(()=>{});return work;}
+async function flushUnlocked(){let queue=await outbox();while(queue.length){await request('/commands',queue[0]);queue.shift();await store(queue);}}
+function flush(){return exclusive(flushUnlocked);}
+function submit(op){if(op.paid!==undefined&&op.paid!==null&&(!Number.isFinite(op.paid)||op.paid<0))return Promise.reject(new Error(__TSK_T('Prezzo pagato non valido')));const recordedAt=Date.now(),captured=JSON.parse(JSON.stringify(op));return exclusive(async()=>{const queue=await outbox();queue.push({id:crypto.randomUUID(),op:{...captured,recordedAt}});await store(queue);if(navigator.onLine)await flushUnlocked();else alert(__TSK_T('Modifica salvata sul telefono. Verrà inviata quando torni online.'));});}
+async function manage(){const queue=await outbox();if(!queue.length)return alert(__TSK_T('Nessuna modifica in attesa di invio.'));const text=queue.map((x,i)=>(i+1)+'. '+(x.op.type==='studio'?(x.op.payload?.action||'Studio'):x.op.type)+' · '+(x.op.sid||x.op.payload?.sid||'sessione')+(x.op.n?' #'+x.op.n:'')).join('\n');const value=prompt(__TSK_T('Modifiche ancora sul telefono. Se una modifica è errata, indica il suo numero per scartarla:\n')+text);if(!value)return;const row=queue[+value-1];if(!row||!confirm(__TSK_T('Scartare questa modifica non ancora inviata?')))return;await exclusive(async()=>{const current=await outbox();await store(current.filter(x=>x.id!==row.id));});}
+function device(){let id=LS.getItem('tsk_pushid');if(!id){id=crypto.randomUUID();LS.setItem('tsk_pushid',id);}return id;}
+async function enablePush(){if(!('serviceWorker'in navigator)||!('PushManager'in root))throw Error(__TSK_T('Questo browser non supporta le notifiche push.'));const keys=await request('/push/key');if(!keys.publicKey)throw Error(__TSK_T('Il proprietario deve prima configurare le chiavi push sul server.'));if(await Notification.requestPermission()!=='granted')throw Error(__TSK_T('Permesso notifiche non concesso. Puoi modificarlo nelle impostazioni del browser.'));const registration=await navigator.serviceWorker.getRegistration();if(!registration?.active)throw Error(__TSK_T('Ricarica il sito installato prima di attivare le notifiche.'));const sub=await registration.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:CryptoBox.b64uToBytes(keys.publicKey)});await request('/push/subscribe',{id:device(),subscription:sub.toJSON()});}
+async function disablePush(){await request('/push/subscribe',{id:device(),remove:true});if(!('serviceWorker'in navigator))return;const registration=await navigator.serviceWorker.getRegistration(),sub=await registration?.pushManager?.getSubscription();if(sub)await sub.unsubscribe();}
+root.Relay={pending:async()=> (await outbox()).length,request,submit,flush,manage,enablePush,disablePush};
+})(window);
